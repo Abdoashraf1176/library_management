@@ -1,0 +1,53 @@
+<odoo>
+    <data>
+
+        <record id="view_library_book_tree" model="ir.ui.view">
+            <field name="name">library.book.tree</field>
+            <field name="model">library.book</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="isbn"/>
+                    <field name="is_available"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_library_book_form" model="ir.ui.view">
+            <field name="name">library.book.form</field>
+            <field name="model">library.book</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="get_order_ids"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-shopping-cart">
+                                <field name="order_count" widget="statinfo" string="Orders"/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="name"/>
+                            <field name="isbn"/>
+                            <field name="author_ids" widget="many2many_tags"/>
+                            <field name="published_date"/>
+                            <field name="cover_image"/>
+                            <field name="summary"/>
+                            <field name="total_copies"/>
+                            <field name="sold_copies" readonly="1"/>
+                            <field name="is_available" readonly="1"/>
+                            <field name="show_on_website"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_library_book" model="ir.actions.act_window">
+            <field name="name">Books</field>
+            <field name="res_model">library.book</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+
+</odoo>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="menu_library_books" model="website.menu">
+        <field name="name">Books</field>
+        <field name="url">/library/books</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence">50</field>
+    </record>
+
+    <template id="books_list_template" name="Library Books">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_title pt-5 pb-3">
+                    <div class="container">
+                        <h1 class="text-center">Available Books</h1>
+                        <p class="text-center text-muted">Browse our collection of available books</p>
+                    </div>
+                </section>
+
+                <section class="s_text_block pt-3 pb-5">
+                    <div class="container">
+                        <div class="row">
+                            <t t-if="not books">
+                                <div class="col-12 text-center">
+                                    <p class="text-muted">No books available at the moment.</p>
+                                </div>
+                            </t>
+
+                            <t t-foreach="books" t-as="book">
+                                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                                    <div class="card h-100 shadow-sm">
+                                        <t t-if="book.cover_image">
+                                            <img t-att-src="'data:image/png;base64,%s' % book.cover_image.decode('utf-8')"
+                                                 class="card-img-top"
+                                                 alt="Book Cover"
+                                                 style="height: 300px; object-fit: cover;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                                                 style="height: 300px;">
+                                                <i class="fa fa-book fa-5x text-muted"/>
+                                            </div>
+                                        </t>
+
+                                        <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title">
+                                                <a t-att-href="'/library/book/%s' % book.id"
+                                                   class="text-decoration-none text-dark">
+                                                    <t t-esc="book.name"/>
+                                                </a>
+                                            </h5>
+
+                                            <t t-if="book.author_ids">
+                                                <p class="card-text text-muted small mb-2">
+                                                    <strong>By:</strong>
+                                                    <t t-foreach="book.author_ids" t-as="author">
+                                                        <t t-esc="author.name"/>
+                                                        <t t-if="not author_last">, </t>
+                                                    </t>
+                                                </p>
+                                            </t>
+
+                                            <div class="mt-auto">
+                                                <a t-att-href="'/library/book/%s' % book.id"
+                                                   class="btn btn-primary btn-sm w-100">
+                                                    View Details
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="book_detail_template" name="Book Details">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <t t-if="request.params.get('order_created')">
+                    <div class="container mt-3">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Success!</strong> Your order has been created in draft status.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"/>
+                        </div>
+                    </div>
+                </t>
+
+                <section class="s_text_block pt-5 pb-5">
+                    <div class="container">
+                        <div class="mb-3">
+                            <a href="/library/books" class="btn btn-outline-secondary">
+                                <i class="fa fa-arrow-left"/> Back to Books
+                            </a>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-4 col-md-5 mb-4">
+                                <t t-if="book.cover_image">
+                                    <img t-att-src="'data:image/png;base64,%s' % book.cover_image.decode('utf-8')"
+                                         class="img-fluid rounded shadow"
+                                         alt="Book Cover"/>
+                                </t>
+                                <t t-else="">
+                                    <div class="bg-light rounded shadow d-flex align-items-center justify-content-center"
+                                         style="height: 400px;">
+                                        <i class="fa fa-book fa-5x text-muted"/>
+                                    </div>
+                                </t>
+                            </div>
+
+                            <div class="col-lg-8 col-md-7">
+                                <h1 class="mb-3" t-esc="book.name"/>
+
+                                <t t-if="book.author_ids">
+                                    <div class="mb-3">
+                                        <h5>Authors:</h5>
+                                        <t t-foreach="book.author_ids" t-as="author">
+                                            <span class="badge bg-secondary me-2" t-esc="author.name"/>
+                                        </t>
+                                    </div>
+                                </t>
+
+                                <t t-if="book.isbn">
+                                    <div class="mb-3">
+                                        <strong>ISBN:</strong> <span t-esc="book.isbn"/>
+                                    </div>
+                                </t>
+
+                                <t t-if="book.published_date">
+                                    <div class="mb-3">
+                                        <strong>Published:</strong>
+                                        <span t-field="book.published_date" t-options='{"format": "MMMM dd, yyyy"}'/>
+                                    </div>
+                                </t>
+
+                                <div class="mb-3">
+                                    <strong>Availability:</strong>
+                                    <t t-if="book.total_copies > 0">
+                                        <span class="badge bg-success">
+                                            <t t-esc="book.total_copies"/> copies available
+                                        </span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="badge bg-danger">Out of Stock</span>
+                                    </t>
+                                </div>
+
+                                <t t-if="book.summary">
+                                    <div class="mb-4">
+                                        <h5>Summary:</h5>
+                                        <p class="text-justify" t-esc="book.summary"/>
+                                    </div>
+                                </t>
+
+                                <t t-if="book.total_copies > 0">
+                                    <div class="mt-4">
+                                        <button type="button"
+                                                class="btn btn-primary btn-lg"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#orderModal">
+                                            <i class="fa fa-shopping-cart"/> Order This Book
+                                        </button>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form t-att-action="'/library/book/%s/order' % book.id" method="post">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="orderModalLabel">Order Book</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                            </div>
+
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="customer_name" class="form-label">Your Name</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           id="customer_name"
+                                           name="customer_name"
+                                           placeholder="Enter your name"
+                                           required="required"/>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <i class="fa fa-info-circle"/> Your order will be created in draft status
+                                    and will be reviewed by our team.
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Create Order</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

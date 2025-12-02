@@ -1,0 +1,20 @@
+{
+    'name': 'Library Management',
+    'version': '1.0',
+    'summary': 'Simple library system for managing books, authors, and orders',
+    'category': 'Tools',
+    'author': 'Abdelrahman Ashraf',
+    'depends': ['base', 'website', 'web'],
+    'data': [
+        'security/library_security.xml',
+        'security/ir.model.access.csv',
+        'views/library_book_views.xml',
+        'views/library_author_views.xml',
+        'views/library_order_views.xml',
+        'views/menus.xml',
+        'views/website_templates.xml',
+    ],
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+}
