@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_library_book,library.book,model_library_book,group_librarian,1,1,1,1
+access_library_book,library.book,model_library_book,,1,0,0,0
 access_library_author,library.author,model_library_author,group_librarian,1,1,1,1
 access_library_order,library.order,model_library_order,group_librarian,1,1,1,1
