@@ -40,13 +40,11 @@ library_management/
 │   ├── library_author_views.xml
 │   ├── library_order_views.xml
 │   ├── website_templates.xml
-│   └── menuitems.xml
+│   └── menus.xml
 ├── security/
 │   ├── library_security.xml
 │   └── ir.model.access.csv
-└── static/
-    └── description/
-        └── icon.png
+
 ```
 
 ## 🗄️ Data Models
